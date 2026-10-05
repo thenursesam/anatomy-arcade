@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow">
 <title>Slay Anatomy Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +35,7 @@
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
   /* ===== Brand header ===== */
-  .brand{display:flex;align-items:center;gap:14px;padding:6px 2px 14px}
+  .brand{display:flex;align-items:center;gap:14px;padding:10px 2px 12px;position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding-left:16px;padding-right:16px}
   .badge{width:62px;height:62px;border-radius:50%;flex:none;object-fit:contain;display:block;
     box-shadow:0 6px 18px -10px var(--pink-deep)}
   .brandtext .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--pink-deep);text-transform:uppercase}
@@ -51,7 +52,7 @@
   .score.s1 .v{color:var(--pink)} .score.s2 .v{color:var(--gold)} .score.s3 .v{color:var(--ink)} .score.s4 .v{color:var(--good)}
 
   /* ===== System tabs ===== */
-  .tabsbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,var(--bg) 70%,transparent);padding:8px 0 10px;margin:0 -16px;padding-left:16px;padding-right:16px}
+  .tabsbar{position:sticky;top:var(--brandH,0px);z-index:20;background:var(--bg);padding:8px 0 10px;margin:0 -16px;padding-left:16px;padding-right:16px;border-bottom:1px solid var(--line)}
   .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
   .tabs::-webkit-scrollbar{height:6px}.tabs::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
   .tab{flex:none;display:flex;align-items:center;gap:7px;background:var(--surf);border:1.5px solid var(--line);border-radius:999px;
@@ -764,8 +765,16 @@ function renderMnem(){
   shuffle([correct].concat(distract)).forEach(function(txt){var c=document.createElement("button");c.className="chip";c.textContent=txt;c.onclick=function(){if(txt===correct){addScore(5);hit();mnStep++;renderMnem();toast("+5","good");}else{miss();c.classList.add("bad");toast("Try again","bad");setTimeout(function(){c.classList.remove("bad");},400);}};chips.appendChild(c);});
 }
 
+/* ============ STICKY BRAND OFFSET ============ */
+function syncBrandHeight(){
+  var b=document.querySelector(".brand");
+  if(b) document.documentElement.style.setProperty("--brandH", b.offsetHeight + "px");
+}
+window.addEventListener("resize", syncBrandHeight);
+window.addEventListener("load", syncBrandHeight);
+
 /* ============ INIT ============ */
-loadState();renderVitals();buildTabs();renderSystem();
+loadState();renderVitals();buildTabs();renderSystem();syncBrandHeight();
 </script>
 </body>
 </html>
